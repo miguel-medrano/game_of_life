@@ -1,8 +1,11 @@
-var Board = function(length, height){
+var Board = function(length, height, aliveString, deadString){
     var that = Object.create(Board.prototype);
 
     var ALIVE = 1;
     var DEAD = 0;
+    var ALIVE_STRING = aliveString || "*";
+    var DEAD_STRING = deadString || "-";
+
     var times = function (i, f) {
         if (i === 0) return;
         f(); times (i-1, f)
@@ -20,13 +23,8 @@ var Board = function(length, height){
         return rows;
     }();
 
-
     var isAlive = function(i,j){
         return board[i][j] === ALIVE;
-    };
-
-    that.isAliveCheck = function(i,j){
-        return isAlive(i,j);
     };
 
     var neighborIterate = function(f,i,j){
@@ -50,10 +48,6 @@ var Board = function(length, height){
             }
         },i,j);
         return aliveCounter;
-    };
-
-    that.aliveNeighborsCheck = function(i,j){
-        return aliveNeighbors(i,j);
     };
 
     var forEachCell = function(f){
@@ -82,16 +76,8 @@ var Board = function(length, height){
         }
     };
 
-    that.nextVitalStatusCheck = function(i,j){
-        return nextVitalStatus(i,j);
-    };
-
     var changeInVitalStatus = function(i,j){
         return board[i][j] !== nextVitalStatus(i,j);
-    };
-
-    that.changeInVitalStatusCheck = function(i,j){
-        return changeInVitalStatus(i,j);
     };
 
     that.changeCell = function(i, j){
@@ -102,7 +88,6 @@ var Board = function(length, height){
         var cellsToUpdate = [];
         forEachCell(function(i,j){
             if(changeInVitalStatus(i,j)){
-                console.log('cells to update: ('+i+','+j+')');
                 cellsToUpdate.push({'i':i,'j':j});
             }
         });
@@ -111,18 +96,17 @@ var Board = function(length, height){
         });
     };
 
-    //temporary
-    that.printBoard = function(){
+    that.boardToString = function(){
         var boardString = "";
         for (var j = 0; j < height; j++) {
             for (var i = 0; i < length; i++) {
-                cell = (board[j][i] === ALIVE ? ' * ' : ' - ');
-                if(i === length-1) cell+="\n"
+                cell = (board[j][i] === ALIVE ? ALIVE_STRING : DEAD_STRING);
+                if(i === length-1) cell+="\n";
                 boardString+=cell;
             }
         }
-        console.log(boardString);
-    }
+        return boardString;
+    };
 
     Object.freeze(that);
     return that;

@@ -1,7 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <title>6.170 Assignment 2: Game of Life</title>
+    <link rel="stylesheet" href="./index.css" type="text/css" charset="utf-8">
+
+  </head>
   <body>
-    <script src="./projone.js"></script>
+    <h1>6.170 Game of Life</h1>
+    <div id="options">
+        <input id="board-length" type="number" placeholder="Board Length">
+        <input id="board-height" type="number" placeholder="Board Height">
+        <button id="play-button" type="button">Play</button>
+    </div>
+    <table id="board-table"></table>
+
+
+    <script src="./board.js" charset="utf-8"></script>
+    <script src="./controller.js" charset="utf-8"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            var boardSize = 50;
+            var board = Board(boardSize, boardSize,"*","-");
+
+            CONTROLLER.showBoard(board.boardToString());
+
+            CONTROLLER.registerCellListener(function(i,j){
+                CONTROLLER.clearBoardTable();
+                board.changeCell(i,j);
+                CONTROLLER.showBoard(board.boardToString());
+            });
+
+            CONTROLLER.registerPlayFunction(function() {
+                CONTROLLER.clearBoardTable();
+                board.update();
+                CONTROLLER.showBoard(board.boardToString());
+            });
+
+
+        });
+    </script>
+
   </body>
 </html>

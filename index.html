@@ -3,24 +3,38 @@
   <head>
     <title>6.170 Assignment 2: Game of Life</title>
     <link rel="stylesheet" href="./index.css" type="text/css" charset="utf-8">
-
   </head>
   <body>
     <h1>6.170 Game of Life</h1>
-    <div id="options">
-        <input id="board-length" type="number" placeholder="Board Length">
-        <input id="board-height" type="number" placeholder="Board Height">
+    <div id="commands">
+        <!input id="board-length" type="number" placeholder="Board Length">
+        <!input id="board-height" type="number" placeholder="Board Height">
+        <select id="options">
+            <option value="emptyBoard">New Empty Board</option>
+            <option value="board1">Board 1</option>
+            <option value="board2">Board 2</option>
+            <option value="board3">Board 3</option>
+        </select>
         <button id="play-button" type="button">Play</button>
+        <button id="restart-button" type="button">Restart</button>
     </div>
     <table id="board-table"></table>
 
 
     <script src="./board.js" charset="utf-8"></script>
     <script src="./controller.js" charset="utf-8"></script>
+    <script src="./textBoards.js" charset="utf-8"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function(){
-            var boardSize = 50;
-            var board = Board(boardSize, boardSize,"*","-");
+            var BOARDSIZE = 40;
+            var board = Board(BOARDSIZE,BOARDSIZE);
+
+            var selectedOption = function() {
+                var boardOptions = document.getElementById("options");
+                return boardOptions.options[boardOptions.selectedIndex].value;
+            }
+
+            var boardOption = selectedOption();
 
             CONTROLLER.showBoard(board.boardToString());
 
@@ -34,6 +48,25 @@
                 CONTROLLER.clearBoardTable();
                 board.update();
                 CONTROLLER.showBoard(board.boardToString());
+            });
+
+            CONTROLLER.registerRestartListener(function() {
+                CONTROLLER.pause();
+                CONTROLLER.clearBoardTable();
+                selected = selectedOption();
+                if(selected === "emptyBoard"){
+                    board = Board(BOARDSIZE,BOARDSIZE);
+                } else{
+                    board = BoardFromString(getOptionBoard(selected));
+                }
+                CONTROLLER.showBoard(board.boardToString());
+            });
+
+            CONTROLLER.registerOptionsListener(function(){
+                if(boardOption !== selectedOption()){
+                    boardOption = selectedOption();
+                    CONTROLLER.restart();
+                }
             });
 
 

@@ -13,10 +13,10 @@ var Board = function(length, height, aliveString, deadString){
 
     var board = function() {
         var rows = [];
-        times(length, function () {
+        times(height, function () {
             var col = [];
             rows.push(col);
-            times(height, function () {
+            times(length, function () {
                 col.push(DEAD);
             })
         });
@@ -110,4 +110,20 @@ var Board = function(length, height, aliveString, deadString){
 
     Object.freeze(that);
     return that;
+};
+
+var BoardFromString = function(boardString) {
+    var rows = boardString.split('\n');
+    var board = Board(rows[0].length, rows.length);
+    var aliveCells = [];
+    rows.forEach(function(row,i){
+            row.split("").forEach(function(cell,j){
+                if(cell === "*") aliveCells.push({"i":i,"j":j}) ;
+            });
+        }
+    );
+    aliveCells.forEach(function(cell){
+        board.changeCell(cell.i,cell.j);
+    });
+    return board;
 };

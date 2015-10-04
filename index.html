@@ -7,8 +7,6 @@
   <body>
     <h1>6.170 Game of Life</h1>
     <div id="commands">
-        <!input id="board-length" type="number" placeholder="Board Length">
-        <!input id="board-height" type="number" placeholder="Board Height">
         <select id="options">
             <option value="emptyBoard">New Empty Board</option>
             <option value="board1">Board 1</option>
@@ -25,31 +23,41 @@
     <script src="./controller.js" charset="utf-8"></script>
     <script src="./textBoards.js" charset="utf-8"></script>
     <script>
+        //Runs when page loads
         document.addEventListener('DOMContentLoaded', function(){
+            //Constant
             var BOARDSIZE = 40;
+
+            //Create new board Object
             var board = Board(BOARDSIZE,BOARDSIZE);
 
+            //Function that returns string value of selected option in selector
             var selectedOption = function() {
                 var boardOptions = document.getElementById("options");
                 return boardOptions.options[boardOptions.selectedIndex].value;
-            }
+            };
 
+            //Assigns current selected option
             var boardOption = selectedOption();
 
+            //Display Board
             CONTROLLER.showBoard(board.boardToString());
 
+            //Registers function to run when cell is clicked
             CONTROLLER.registerCellListener(function(i,j){
                 CONTROLLER.clearBoardTable();
                 board.changeCell(i,j);
                 CONTROLLER.showBoard(board.boardToString());
             });
 
+            //Registers function to run when play button is clicked
             CONTROLLER.registerPlayFunction(function() {
                 CONTROLLER.clearBoardTable();
                 board.update();
                 CONTROLLER.showBoard(board.boardToString());
             });
 
+            //Registers function to run when restart button is clicked
             CONTROLLER.registerRestartListener(function() {
                 CONTROLLER.pause();
                 CONTROLLER.clearBoardTable();
@@ -62,13 +70,13 @@
                 CONTROLLER.showBoard(board.boardToString());
             });
 
+            //Registers function to run when selector is clicked
             CONTROLLER.registerOptionsListener(function(){
                 if(boardOption !== selectedOption()){
                     boardOption = selectedOption();
                     CONTROLLER.restart();
                 }
             });
-
 
         });
     </script>
